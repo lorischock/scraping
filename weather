@@ -1,1 +1,19 @@
 pip install requests beautifulsoup4 pandas
+
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+url = "https://www.timeanddate.com/weather/spain/malaga/historic?month=7&year=2023"
+response = requests.get(url)
+soup = BeautifulSoup(response.text, 'html.parser')
+
+# Extract data (this is a simplified example, actual scraping will depend on the page structure)
+rows = soup.find_all('tr')
+data = []
+for row in rows:
+    cols = row.find_all('td')
+    data.append([col.text for col in cols])
+
+df = pd.DataFrame(data, columns=['DateTime', 'Temperature_F'])
+df.to_csv('hourly_temperatures_malaga_july_2023.csv', index=False)
